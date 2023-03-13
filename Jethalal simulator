@@ -1,0 +1,159 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Set the size of the game window
+screen_WIDTH = 1500
+screen_HEIGHT = 900
+game_screen = pygame.display.set_mode((screen_WIDTH, screen_HEIGHT))
+
+# Load the images of the characters
+jethalal_image = pygame.image.load('jethalal.jpg')
+jethalal_image = pygame.transform.scale(jethalal_image, (100, 100))
+babita_image = pygame.image.load('babita.jpg')
+babita_iamge = pygame.transform.scale(babita_image, (100, 100))
+daya_image = pygame.image.load('daya.jpg')
+daya_image = pygame.transform.scale(daya_image, (100, 100))
+bapuji_image = pygame.image.load('bapuji.jpg')
+bapuji_image = pygame.transform.scale(bapuji_image, (100, 100))
+iyer_image = pygame.image.load('iyer.jpg')
+iyer_image = pygame.transform.scale(iyer_image, (100, 100))
+
+
+# Load background image
+bg_image = pygame.image.load("pic.jpg")
+
+print("Images loaded successfully.")
+
+# Set up the game objects
+class Character:
+    def __init__(self, image):
+        self.image = image
+        self.rect = image.get_rect()
+        self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+        self.rect.y = random.randint(0, SCREEN_HEIGHT - self.rect.height)
+        
+    def update(self):
+        # Move the character in a random pattern
+        self.rect.x += random.randint(-5, 5)
+        self.rect.y += random.randint(-5, 5)
+        
+        # Keep the character on screen
+        if self.rect.x < 0:
+            self.rect.x = 0
+        elif self.rect.x > SCREEN_WIDTH - self.rect.width:
+            self.rect.x = SCREEN_WIDTH - self.rect.width
+        if self.rect.y < 0:
+            self.rect.y = 0
+        elif self.rect.y > SCREEN_HEIGHT - self.rect.height:
+            self.rect.y = SCREEN_HEIGHT - self.rect.height
+
+
+
+
+
+
+# Set the initial positions of the characters
+jethalal_x = 50
+jethalal_y = 50
+babita_x = 700
+babita_y = 500
+daya_x = 200
+daya_y = 300
+bapuji_x = 500
+bapuji_y = 100
+iyer_x = 400
+iyer_y = 400
+
+# Set the number of lives
+lives = 5
+
+# Load a font and set the size of the text
+font = pygame.font.SysFont('Arial', 24)
+
+# Render the text onto a surface
+lives_text = font.render('Lives: ' + str(lives), True, (255, 255, 255))
+
+
+
+# Display the text on the game window
+game_screen.blit(lives_text, (10, 10))
+
+
+# Main game loop
+while True:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Move Jethalal's position based on arrow key input
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        jethalal_x -= 5
+    if keys[pygame.K_RIGHT]:
+        jethalal_x += 5
+    if keys[pygame.K_UP]:
+        jethalal_y -= 5
+    if keys[pygame.K_DOWN]:
+        jethalal_y += 5
+
+    # Create Rect objects for the characters
+    jethalal_rect = pygame.Rect(jethalal_x, jethalal_y, jethalal_image.get_width(), jethalal_image.get_height())
+    daya_rect = pygame.Rect(daya_x, daya_y, daya_image.get_width(), daya_image.get_height())
+    bapuji_rect = pygame.Rect(bapuji_x, bapuji_y, bapuji_image.get_width(), bapuji_image.get_height())
+    iyer_rect = pygame.Rect(iyer_x, iyer_y, iyer_image.get_width(), iyer_image.get_height())
+    babita_rect = pygame.Rect(babita_x, babita_y, babita_image.get_width(), babita_image.get_height())
+
+    if jethalal_rect.colliderect(daya_rect) or jethalal_rect.colliderect(bapuji_rect) or jethalal_rect.colliderect(iyer_rect) :
+        lives -=1
+        if lives==0:
+            jethalal_x, jethalal_y = -100, -100        
+            daya_x, daya_y = -100, -100
+            
+            bapuji_x, bapuji_y = -100, -100
+            iyer_x, iyer_y = -100, -100
+
+            
+        # If all lives are lost, set the positions of all characters to (-100, -100) to make them disappear
+        
+    if  jethalal_rect.colliderect(babita_rect):        
+        jethababita_image = pygame.image.load('jethababita.jpg')
+        babita_x, babita_y = -100, -100
+        jethalal_x, jethalal_y = -100, -100 
+        game_screen.blit(jethababita_image, (0, 0))
+        
+
+         # Get the size of the image
+        jethababita_x, jethababita_y = jethababita_image.get_rect().size
+
+         # Calculate the position to center the image
+        center_x = screen_WIDTH // 2
+        center_y = screen_HEIGHT // 2
+        jethababita_x = center_x - jethababita_x// 2
+        jethababita_y = center_y - jethababita_y // 2
+
+        # Blit the image to the screen
+        game_screen.blit(jethababita_image, (jethababita_x, jethababita_y))
+
+    
+     # Draw the game objects
+    #{screen.blit(bg_image, (0, 0))
+   # screen.blit(jethalal_image, jethalal_rect)
+   # screen.blit(babita_image, babita_rect)    # Handle the happy ending here
+    
+        # Display the victory screen
+    
+    # Display the characters on the screen
+    game_screen.blit(jethalal_image, (jethalal_x, jethalal_y))
+    game_screen.blit(babita_image, (babita_x, babita_y))
+    game_screen.blit(daya_image, (daya_x, daya_y))
+    game_screen.blit(bapuji_image, (bapuji_x, bapuji_y))
+    game_screen.blit(iyer_image, (iyer_x, iyer_y))
+
+ 
+    # Update the display
+    pygame.display.update()
